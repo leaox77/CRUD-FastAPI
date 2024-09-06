@@ -23,12 +23,18 @@ conda create --name fastapi_env python=3.11
 
 ### 3. Activate the enviroment.
 
+```bash
 conda activate fastapi_env
+```
 
 ### 4. Install dependencies
 
+```bash
 pip install -r requirements.txt
+```
 
 ### 5. Run the application
 
+```bash
 uvicorn main:app --reload
+```
