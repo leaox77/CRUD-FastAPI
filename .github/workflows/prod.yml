@@ -18,8 +18,8 @@ jobs:
               key: ${{ secrets.AWS_SSH_KEY }}
               script: |
                 cd CRUD-FastAPI
-                git fetch origin main
-                git reset --hard origin/main
+                git fetch origin master
+                git reset --hard origin/master
 
                 sudo docker kill crud-fastapi
 
