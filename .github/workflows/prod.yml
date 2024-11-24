@@ -1,0 +1,28 @@
+name: Deploy to Production
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+          - name: Deploy to AWS
+            uses: appleboy/ssh-action@v0.1.3
+            with:
+              host: ${{ secrets.AWS_HOST }}
+              username: ${{ secrets.AWS_USERNAME }}
+              key: ${{ secrets.AWS_SSH_KEY }}
+              script: |
+                cd CRUD-FastAPI
+                git fetch origin main
+                git reset --hard origin/main
+
+                sudo docker kill crud-fastapi
+
+                sudo docker build -t crud-fastapi .
+                sudo docker run -d -p 8000:8000 --name crud-fastapi crud-fastapi
+                

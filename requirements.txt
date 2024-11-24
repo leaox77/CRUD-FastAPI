@@ -3,3 +3,4 @@ uvicorn==0.21.1
 pydantic==1.10.4
 aiofiles==23.1.0  # Para manejar archivos asíncronamente
 python-multipart==0.0.9
+gunicorn==23.0.0

@@ -47,12 +47,9 @@ async def create_item(
 ):
     data = read_data()
 
-    # Read the content of the file
-    file_content = await file.read()
-
     # Create a new item
     new_item = {
-        "id": len(data) + 1,
+        "id": max(map(lambda x: x['id'], data)) + 1,
         "name": name,
         "lastname": lastname,
         "file": file.filename
@@ -61,25 +58,20 @@ async def create_item(
     write_data(data)
     return JSONResponse(content=new_item)
 
-# UPDATE (PUT) - Update an existing item
-@app.put("/items/{item_id}/")
+# UPDATE (PATCH) - Update an existing item
+@app.patch("/items/{item_id}/")
 async def update_item(
     item_id: int,
-    name: str = Form(...),
-    lastname: str = Form(...),
-    file: UploadFile = File(None),
+    item: dict,
 ):
     data = read_data()
 
-    #Search for the item to update
-    for item in data:
-        if item["id"] == item_id:
-            item["name"] = name
-            item["lastname"] = lastname
-            if file:
-                item["file"] = file.filename
+    # Search for the item to update
+    for existing_item in data:
+        if existing_item["id"] == item_id:
+            existing_item.update(item)
             write_data(data)
-            return JSONResponse(content=item)
+            return JSONResponse(content=existing_item)
     
     raise HTTPException(status_code=404, detail="Item not found")
 
@@ -89,10 +81,11 @@ async def delete_item(item_id: int):
     data = read_data()
 
     # Filter the item to delete
-    new_data = [item for item in data if item["id"] != item_id]
+    new_data = list(filter(lambda item: item["id"] != item_id, data))
     
     if len(data) == len(new_data):
         raise HTTPException(status_code=404, detail="Item not found")
 
     write_data(new_data)
     return JSONResponse(content={"detail": "Item deleted"})
+
