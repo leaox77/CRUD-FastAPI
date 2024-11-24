@@ -11,7 +11,7 @@ jobs:
 
         steps:
           - name: Deploy to AWS
-            uses: appleboy/ssh-action@v0.1.3
+            uses: appleboy/ssh-action@master
             with:
               host: ${{ secrets.AWS_HOST }}
               username: ${{ secrets.AWS_USERNAME }}
